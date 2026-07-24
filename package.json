@@ -1,0 +1,13 @@
+{
+  "name": "shiftdev-editor",
+  "version": "1.0.0",
+  "description": "ShiftDev Cloud Studio Pro Engine",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.13.0"
+  }
+}
