@@ -8,9 +8,12 @@ const server = http.createServer(app);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Routes mapping
+// Routes Mapping
 const pageRoutes = require('./src/routes/pageRoutes');
+const fsRoutes = require('./src/routes/fsRoutes');
+
 app.use('/', pageRoutes);
+app.use('/api/fs', fsRoutes);
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
