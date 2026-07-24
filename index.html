@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShiftDev Editor - Cloud Edition</title>
+    <!-- CodeMirror 6 / Core CSS عبر CDN دعم الـ Folding والتظليل -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/fold/foldgutter.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/neo.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- 1. الشريط الجانبي العمودي (Activity Bar) -->
+        <aside class="activity-bar">
+            <div class="top-icons">
+                <button class="nav-btn active" data-panel="explorer" title="الملفات (Explorer)">📂</button>
+                <button class="nav-btn" data-panel="git" title="إدارة Git (Source Control)">🔀</button>
+                <button class="nav-btn" data-panel="store" title="متجر اللغات والإضافات">🛒</button>
+                <button class="nav-btn" data-panel="terminal" title="الطرفية (Terminal)">💻</button>
+            </div>
+            <div class="bottom-icons">
+                <button class="nav-btn" id="theme-toggle-btn" title="تبديل الوضع الداكن/الفاتح">☀️</button>
+                <button class="nav-btn" data-panel="settings" title="الإعدادات">⚙️</button>
+            </div>
+        </aside>
+
+        <!-- 2. اللوحة الجانبية المتحركة (Sidebar Content Panel) -->
+        <aside class="sidebar-panel" id="sidebar-panel">
+            
+            <!-- قسم إدارة الملفات -->
+            <div class="panel-content active" id="panel-explorer">
+                <div class="panel-header">
+                    <h3>مستكشف الملفات</h3>
+                    <div class="panel-actions">
+                        <button onclick="createNewFilePrompt()" title="ملف جديد">+📄</button>
+                        <button onclick="createNewFolderPrompt()" title="مجلد جديد">+📁</button>
+                    </div>
+                </div>
+                <div class="file-tree" id="file-tree-container"></div>
+            </div>
+
+            <!-- قسم إدارة Git والرفع السريع -->
+            <div class="panel-content" id="panel-git">
+                <div class="panel-header">
+                    <h3>إدارة Git & GitHub</h3>
+                </div>
+                <div class="git-container">
+                    <input type="password" id="github-token" placeholder="GitHub Token..." class="input-field">
+                    <input type="text" id="github-repo" placeholder="username/repository" class="input-field">
+                    <button class="btn btn-primary" onclick="connectGithub()">ربط المستودع</button>
+                    <hr>
+                    <div class="git-status-box">
+                        <span>التغيرات غير المرفوعة: <b id="git-changes-count">0</b></span>
+                    </div>
+                    <textarea id="commit-msg" placeholder="رسالة التغيير (Commit message)..." class="input-field"></textarea>
+                    <button class="btn btn-success" onclick="quickPushGit()">🚀 Push التغييرات بنقرة واحدة</button>
+                </div>
+            </div>
+
+            <!-- قسم متجر اللغات والـ CDN -->
+            <div class="panel-content" id="panel-store">
+                <div class="panel-header">
+                    <h3>متجر اللغات والإضافات</h3>
+                </div>
+                <div class="store-list" id="store-items-container">
+                    <!-- سيتم إضافة عناصر المتجر ديناميكياً -->
+                </div>
+            </div>
+
+            <!-- قسم الإعدادات -->
+            <div class="panel-content" id="panel-settings">
+                <div class="panel-header">
+                    <h3>إعدادات المحرر</h3>
+                </div>
+                <div class="settings-group">
+                    <label>حجم الخط (Font Size):</label>
+                    <input type="number" id="setting-font-size" value="14" min="10" max="30" onchange="updateEditorSettings()">
+                    
+                    <label>عرض المسافة البادئة (Tab Size):</label>
+                    <select id="setting-tab-size" onchange="updateEditorSettings()">
+                        <option value="2">2 المسافات</option>
+                        <option value="4" selected>4 المسافات</option>
+                    </select>
+
+                    <label>ثيم المحرر (Editor Theme):</label>
+                    <select id="setting-editor-theme" onchange="updateEditorSettings()">
+                        <option value="dracula">Dracula (داكن)</option>
+                        <option value="neo">Neo (فاتح)</option>
+                    </select>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- مقبض سحب لتكبير/تصغير الشريط الجانبي -->
+        <div class="resizing-divider" id="resizer-sidebar"></div>
+
+        <!-- 3. منطقة المحرر الرئيسية والمعاينة والـ Terminal -->
+        <main class="main-workspace">
+            
+            <!-- أشرطة الأبواب والتبويب upper tabs -->
+            <div class="editor-tabs-bar" id="editor-tabs-bar"></div>
+
+            <!-- منطقة المحرر والمعاينة السفلية -->
+            <div class="work-split-container">
+                
+                <!-- لوحة الكود (Code Area) -->
+                <section class="code-section" id="code-section">
+                    <div id="codemirror-editor-container"></div>
+                </section>
+
+                <div class="resizing-divider horizontal" id="resizer-preview"></div>
+
+                <!-- لوحة المعاينة (Live Preview Window) -->
+                <section class="preview-section" id="preview-section">
+                    <div class="preview-header">
+                        <span>المعاينة المباشرة (Live Preview)</span>
+                        <button onclick="runLivePreview()">🔄 تحديث</button>
+                    </div>
+                    <iframe id="preview-iframe"></iframe>
+                </section>
+
+            </div>
+
+            <!-- لوحة Terminal السفلية -->
+            <div class="resizing-divider vertical" id="resizer-terminal"></div>
+            <section class="terminal-section" id="terminal-section">
+                <div class="terminal-header">
+                    <span>💻 Terminal (Interactive Shell)</span>
+                    <button onclick="clearTerminal()">إخلاء</button>
+                </div>
+                <div class="terminal-logs" id="terminal-output"></div>
+                <div class="terminal-input-line">
+                    <span class="prompt">shiftdev@cloud:~$</span>
+                    <input type="text" id="terminal-input" placeholder="اكتب الأمر هنا (مثال: node, python, git status, help)..." autocomplete="off">
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- مكتبات CodeMirror الأساسية للطي واللغات -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/fold/foldcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/fold/foldgutter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/fold/xml-fold.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/fold/brace-fold.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,235 @@
+:root {
+    /* المتغيرات الافتراضية (الوضع الداكن) */
+    --bg-main: #1e1e1e;
+    --bg-secondary: #252526;
+    --bg-tertiary: #333333;
+    --text-color: #cccccc;
+    --text-active: #ffffff;
+    --border-color: #3c3c3c;
+    --accent-color: #0e639c;
+    --accent-hover: #1177bb;
+    --sidebar-width: 260px;
+    --activity-bar-width: 50px;
+}
+
+[data-theme="light"] {
+    /* المتغيرات للوضع الفاتح */
+    --bg-main: #ffffff;
+    --bg-secondary: #f3f3f3;
+    --bg-tertiary: #e8e8e8;
+    --text-color: #333333;
+    --text-active: #000000;
+    --border-color: #e0e0e0;
+    --accent-color: #007acc;
+    --accent-hover: #0062a3;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body, html {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--bg-main);
+    color: var(--text-color);
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Activity Bar - الشريط الجانبي الأيقونات */
+.activity-bar {
+    width: var(--activity-bar-width);
+    background-color: var(--bg-secondary);
+    border-left: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    z-index: 10;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    padding: 10px;
+    cursor: pointer;
+    color: var(--text-color);
+    width: 100%;
+    transition: 0.2s;
+}
+
+.nav-btn:hover, .nav-btn.active {
+    color: var(--text-active);
+    background-color: var(--bg-tertiary);
+    border-right: 3px solid var(--accent-color);
+}
+
+/* Sidebar Panel - محتوى اللوحة الجانبية */
+.sidebar-panel {
+    width: var(--sidebar-width);
+    background-color: var(--bg-secondary);
+    border-left: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.panel-content {
+    display: none;
+    padding: 15px;
+}
+
+.panel-content.active {
+    display: block;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+}
+
+/* Resizing Dividers - مقابض التحكم بالأحجام */
+.resizing-divider {
+    width: 4px;
+    background-color: var(--border-color);
+    cursor: col-resize;
+    transition: background-color 0.2s;
+}
+
+.resizing-divider:hover {
+    background-color: var(--accent-color);
+}
+
+.resizing-divider.horizontal {
+    height: 4px;
+    width: 100%;
+    cursor: row-resize;
+}
+
+/* Workspace Main Layout */
+.main-workspace {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--bg-main);
+}
+
+.editor-tabs-bar {
+    height: 35px;
+    background-color: var(--bg-secondary);
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    overflow-x: auto;
+}
+
+.work-split-container {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+.code-section, .preview-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.preview-header, .terminal-header {
+    height: 30px;
+    background-color: var(--bg-tertiary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: #ffffff;
+}
+
+/* Terminal Styling */
+.terminal-section {
+    height: 180px;
+    background-color: #0f0f0f;
+    color: #00ff00;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.terminal-logs {
+    flex: 1;
+    padding: 8px;
+    overflow-y: auto;
+    font-size: 0.85rem;
+}
+
+.terminal-input-line {
+    display: flex;
+    padding: 5px;
+    background-color: #1a1a1a;
+}
+
+.terminal-input-line input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    outline: none;
+    margin-right: 5px;
+    font-family: monospace;
+}
+
+/* Input & Button Controls */
+.input-field {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    border-radius: 4px;
+}
+
+.btn {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-primary { background-color: var(--accent-color); color: white; }
+.btn-success { background-color: #2ecc71; color: white; }
+
+/* CodeMirror Folded Custom Style */
+.CodeMirror-foldmarker {
+    color: #f1c40f;
+    text-shadow: 0 0 2px #b7950b;
+    font-family: monospace;
+    cursor: pointer;
+    padding: 0 4px;
+}
