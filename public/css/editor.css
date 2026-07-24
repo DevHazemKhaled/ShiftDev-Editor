@@ -1,0 +1,50 @@
+* { box-sizing: border-box; }
+
+.editor-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.top-bar {
+    height: 45px;
+    background: #11111b;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+}
+
+.main-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.file-tree {
+    width: 250px;
+    background: #181825;
+    border-left: 1px solid var(--border-color);
+    padding: 15px;
+}
+
+.monaco-workspace {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #1e1e2e;
+}
+
+.code-editor-container {
+    flex: 2;
+    padding: 10px;
+}
+
+.terminal-container {
+    flex: 1;
+    background: #000;
+    border-top: 1px solid var(--border-color);
+    padding: 10px;
+    font-family: monospace;
+}
