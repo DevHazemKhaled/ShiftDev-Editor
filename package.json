@@ -1,7 +1,7 @@
 {
   "name": "shiftdev-editor",
   "version": "1.0.0",
-  "description": "ShiftDev Cloud Studio Pro Engine",
+  "description": "ShiftDev Cloud Studio Pro Engine - Cloud IDE",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
