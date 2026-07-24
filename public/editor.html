@@ -3,49 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShiftDev Workspace</title>
+    <title>ShiftDev Cloud Workspace</title>
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/editor.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs/loader.min.js"></script>
     <script src="https://unpkg.com/piesocket-js@4"></script>
-    <style>
-        * { box-sizing: border-box; }
-        body { margin: 0; padding: 0; background: #181825; color: #cdd6f4; font-family: sans-serif; height: 100vh; display: flex; flex-direction: column; }
-        header { background: #11111b; padding: 12px 20px; border-bottom: 1px solid #313244; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: bold; color: #d4af37; font-size: 1.1rem; }
-        .main-container { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: 240px; background: #1e1e2e; border-left: 1px solid #313244; padding: 15px; }
-        .editor-area { flex: 1; display: flex; flex-direction: column; background: #11111b; }
-        .code-view { flex: 2; padding: 20px; font-family: monospace; color: #a6e3a1; font-size: 14px; background: #181825; border-bottom: 1px solid #313244; }
-        .terminal-panel { flex: 1; background: #000; padding: 15px; font-family: monospace; color: #f5e0dc; overflow-y: auto; }
-        .status-badge { background: #a6e3a1; color: #11111b; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
-        a { color: #89b4fa; text-decoration: none; font-size: 14px; }
-    </style>
 </head>
 <body>
-    <header>
-        <span class="logo">ShiftDev Studio v1.0</span>
-        <span id="socket-status" class="status-badge">جاري الاتصال بالسوكيت...</span>
-        <div>
-            <a href="/">الرئيسية</a> | 
-            <a href="/settings">الإعدادات</a>
-        </div>
-    </header>
-    <div class="main-container">
-        <div class="sidebar">
-            <h4 style="margin-top:0; color:#cba6f7;">📁 المستكشف</h4>
-            <ul style="list-style:none; padding:0; line-height:2;">
-                <li>📄 server.js</li>
-                <li>📄 index.html</li>
-                <li>📄 editor.html</li>
-            </ul>
-        </div>
-        <div class="editor-area">
-            <div class="code-view">
-                // ShiftDev Editor Core Engine<br>
-                // Monaco Engine Ready...
+    <div class="editor-layout">
+        <header class="top-bar">
+            <div style="font-weight: bold; color: var(--accent-gold);">ShiftDev Cloud Studio</div>
+            <div>
+                <a href="/" style="color: var(--text-muted); text-decoration: none; margin-left: 15px;">الرئيسية</a>
+                <a href="/settings" style="color: var(--text-muted); text-decoration: none;">الإعدادات</a>
             </div>
-            <div class="terminal-panel" id="terminal-out">
-                [ShiftDev Terminal]: Connecting to PieSocket Cluster...<br>
-            </div>
+        </header>
+        <div class="main-body">
+            <aside class="file-tree">
+                <h4 style="color: var(--accent-gold); margin-top: 0;">📁 شجرة المشروع</h4>
+                <div id="tree-root">جاري التحميل...</div>
+            </aside>
+            <main class="monaco-workspace">
+                <div id="monaco-container" class="code-editor-container"></div>
+                <div class="terminal-container" id="terminal-log">
+                    [ShiftDev Cloud Terminal v1.0 Ready]
+                </div>
+            </main>
         </div>
     </div>
+    <script src="/js/editor-core.js"></script>
+    <script src="/js/terminal-client.js"></script>
 </body>
 </html>
